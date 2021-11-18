@@ -1,16 +1,31 @@
+breed[peccaries peccary]
+
 patches-own[
   forest?; whether the patch is forested
+  contacts; # of times a peccary has made contact with the patch
 ]
 
 to setup
   clear-all
   generate-forest
   ask patches [
+    set contacts 0 ; intialize the number of contacts to 0
     ifelse forest? = true
       [set pcolor green]
       [set pcolor gray]
   ]
+  place-initial-peccary
 end
+
+to place-initial-peccary
+  create-peccaries 1
+  ask peccaries [
+    move-to one-of patches with [forest? = true]
+    set color red
+    ask patch-here [set contacts contacts + 1]
+  ]
+end
+
 
 to generate-forest
   let xs (list)
@@ -43,7 +58,6 @@ to generate-forest
          ] )
        set xs but-first xs
        set ys but-first ys
-
     ]
 end
 
@@ -91,7 +105,7 @@ percent-forest-cover
 percent-forest-cover
 0
 100
-18.0
+51.0
 1
 1
 NIL
@@ -106,7 +120,7 @@ num-fragments
 num-fragments
 1
 6
-2.0
+3.0
 1
 1
 NIL
