@@ -15,6 +15,7 @@ to setup
       [set pcolor gray]
   ]
   place-initial-peccary
+  reset-ticks
 end
 
 to place-initial-peccary
@@ -26,6 +27,14 @@ to place-initial-peccary
   ]
 end
 
+to go
+  ask turtles [
+    rt random 360 ;; turn right
+    let x random max-step-length ;; pick random value up to step length (user input)
+    fd 6.67 * e ^ (-6.67 * x)
+  ]
+tick
+end
 
 to generate-forest
   let xs (list)
@@ -105,7 +114,7 @@ percent-forest-cover
 percent-forest-cover
 0
 100
-51.0
+18.0
 1
 1
 NIL
@@ -142,6 +151,34 @@ NIL
 NIL
 NIL
 1
+
+INPUTBOX
+31
+188
+180
+248
+max-step-length
+10.0
+1
+0
+Number
+
+BUTTON
+52
+286
+115
+319
+GO!
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -485,7 +522,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.0
+NetLogo 6.2.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
