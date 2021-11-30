@@ -29,9 +29,24 @@ end
 
 to go
   ask turtles [
-    rt random 360 ;; turn right
-    let x random max-step-length ;; pick random value up to step length (user input)
-    fd 6.67 * e ^ (-6.67 * x)
+    let rand-angle random 360 ;; turn right
+    let max-step random max-step-length ;; pick random value up to step length (user input)
+    let fd-distance 6.67 * e ^ (-6.67 * max-step)
+
+    let future-patch patch-right-and-ahead rand-angle fd-distance
+    let is-future-forest false
+
+    ask future-patch [
+      if forest? = true
+         [set is-future-forest true]
+    ]
+
+    if is-future-forest = true
+      [rt rand-angle
+        fd fd-distance]
+
+
+    ask patch-here [set contacts contacts + 1]
   ]
 tick
 end
