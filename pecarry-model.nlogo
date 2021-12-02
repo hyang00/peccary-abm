@@ -33,6 +33,18 @@ to go
     let max-step random max-step-length ;; pick random value up to step length (user input)
     let fd-distance 6.67 * e ^ (-6.67 * max-step)
 
+    let total-distance 1
+    let next-patch patch-right-and-ahead rand-angle total-distance
+    let crosses-matrix false
+    while (crosses-matrix = false and total-distance < fd-distance) [
+      ask next-patch [
+        if forest? = false
+          [set crosses-matrix true]
+      ]
+      set total-distance (total-distance + 1)
+      let next-path patch-right-and-ahead rand-angle total-distance
+    ]
+
     let future-patch patch-right-and-ahead rand-angle fd-distance
     let is-future-forest false
 
@@ -42,7 +54,8 @@ to go
     ]
 
     if is-future-forest = true
-      [rt rand-angle
+      [[if ((crosses-matrix = false) or (random 1 = 0))]
+        [rt rand-angle
         fd fd-distance]
 
 
