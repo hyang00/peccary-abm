@@ -36,13 +36,14 @@ to go
     let total-distance 1
     let next-patch patch-right-and-ahead rand-angle total-distance
     let crosses-matrix false
-    while (crosses-matrix = false and total-distance < fd-distance) [
+    while [crosses-matrix = false and total-distance < fd-distance]
+    [
+      set total-distance (total-distance + 1)
+      set next-patch patch-right-and-ahead rand-angle total-distance
       ask next-patch [
-        if forest? = false
+        if forest? != true
           [set crosses-matrix true]
       ]
-      set total-distance (total-distance + 1)
-      let next-path patch-right-and-ahead rand-angle total-distance
     ]
 
     let future-patch patch-right-and-ahead rand-angle fd-distance
@@ -54,12 +55,15 @@ to go
     ]
 
     if is-future-forest = true
-      [[if ((crosses-matrix = false) or (random 1 = 0))]
+    [
+        if ((crosses-matrix = false) or (random 10 = 0))
         [rt rand-angle
-        fd fd-distance]
+          fd fd-distance]
+    ]
 
 
     ask patch-here [set contacts contacts + 1]
+
   ]
 tick
 end
@@ -550,7 +554,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.1
+NetLogo 6.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
