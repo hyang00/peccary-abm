@@ -36,10 +36,12 @@ to go
     let future-patch patch-right-and-ahead rand-angle fd-distance
     let is-future-forest false
 
-    ask future-patch [
+    if future-patch != nobody
+    [ask future-patch [
       if forest? = true
-         [set is-future-forest true]
-    ]
+      [set is-future-forest true]
+    ]]
+
 
     ifelse is-future-forest = true
     [
@@ -50,9 +52,12 @@ to go
         [
            set total-distance (total-distance + 1)
            set next-patch patch-right-and-ahead rand-angle total-distance
-           ask next-patch [
+           if next-patch != nobody
+           [
+             ask next-patch [
               if forest? != true
-               [set crosses-matrix true]
+              [set crosses-matrix true]
+           ]
            ]
         ]
         let distance-moved 0
@@ -135,8 +140,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
