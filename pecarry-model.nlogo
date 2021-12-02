@@ -33,19 +33,6 @@ to go
     let max-step random max-step-length ;; pick random value up to step length (user input)
     let fd-distance 6.67 * e ^ (-6.67 * max-step)
 
-    let total-distance 1
-    let next-patch patch-right-and-ahead rand-angle total-distance
-    let crosses-matrix false
-    while [crosses-matrix = false and total-distance < fd-distance]
-    [
-      set total-distance (total-distance + 1)
-      set next-patch patch-right-and-ahead rand-angle total-distance
-      ask next-patch [
-        if forest? != true
-          [set crosses-matrix true]
-      ]
-    ]
-
     let future-patch patch-right-and-ahead rand-angle fd-distance
     let is-future-forest false
 
@@ -54,15 +41,39 @@ to go
          [set is-future-forest true]
     ]
 
-    if is-future-forest = true
+    ifelse is-future-forest = true
     [
-        if ((crosses-matrix = false) or (random 10 = 0))
-        [rt rand-angle
-          fd fd-distance]
+        let total-distance 1
+        let next-patch patch-right-and-ahead rand-angle total-distance
+        let crosses-matrix false
+        while [crosses-matrix = false and total-distance < fd-distance]
+        [
+           set total-distance (total-distance + 1)
+           set next-patch patch-right-and-ahead rand-angle total-distance
+           ask next-patch [
+              if forest? != true
+               [set crosses-matrix true]
+           ]
+        ]
+        let distance-moved 0
+        if ((crosses-matrix = false) or (random 1 = 0))
+          [
+             rt rand-angle
+             ask peccaries [set color blue]
+             while[distance-moved < fd-distance]
+             [
+                 ifelse (patch-ahead 1 != nobody)
+                 [
+                    fd 1
+                    ask patch-here [set contacts contacts + 1]
+                    set distance-moved distance-moved + 1
+                    ask peccaries [set color red]
+                 ]
+                 [stop]
+             ]
+          ]
     ]
-
-
-    ask patch-here [set contacts contacts + 1]
+    [ask patch-here [set contacts contacts + 1]]
 
   ]
 tick
