@@ -28,60 +28,61 @@ to place-initial-peccary
 end
 
 to go
-  ask turtles [
-    let rand-angle random 360 ;; turn right
-    let max-step random max-step-length ;; pick random value up to step length (user input)
-    let fd-distance 6.67 * e ^ (-6.67 * max-step)
+  if ticks < num-steps [
+    ask turtles [
+      let rand-angle random 360 ;; turn right
+      let max-step random max-step-length ;; pick random value up to step length (user input)
+      let fd-distance 6.67 * e ^ (-6.67 * max-step)
 
-    let future-patch patch-right-and-ahead rand-angle fd-distance
-    let is-future-forest false
+      let future-patch patch-right-and-ahead rand-angle fd-distance
+      let is-future-forest false
 
-    if future-patch != nobody
-    [ask future-patch [
-      if forest? = true
-      [set is-future-forest true]
-    ]]
+      if future-patch != nobody
+      [ask future-patch [
+        if forest? = true
+        [set is-future-forest true]
+      ]]
 
 
-    ifelse is-future-forest = true
-    [
+      ifelse is-future-forest = true
+      [
         let total-distance 1
         let next-patch patch-right-and-ahead rand-angle total-distance
         let crosses-matrix false
         while [crosses-matrix = false and total-distance < fd-distance]
         [
-           set total-distance (total-distance + 1)
-           set next-patch patch-right-and-ahead rand-angle total-distance
-           if next-patch != nobody
-           [
-             ask next-patch [
+          set total-distance (total-distance + 1)
+          set next-patch patch-right-and-ahead rand-angle total-distance
+          if next-patch != nobody
+          [
+            ask next-patch [
               if forest? != true
               [set crosses-matrix true]
-           ]
-           ]
+            ]
+          ]
         ]
         let distance-moved 0
         if ((crosses-matrix = false) or (random 1 = 0))
           [
-             rt rand-angle
-             ask peccaries [set color blue]
-             while[distance-moved < fd-distance]
-             [
-                 ifelse (patch-ahead 1 != nobody)
-                 [
-                    fd 1
-                    ask patch-here [set contacts contacts + 1]
-                    set distance-moved distance-moved + 1
-                    ask peccaries [set color red]
-                 ]
-                 [stop]
-             ]
-          ]
+            rt rand-angle
+            ask peccaries [set color blue]
+            while[distance-moved < fd-distance]
+            [
+              ifelse (patch-ahead 1 != nobody)
+              [
+                fd 1
+                ask patch-here [set contacts contacts + 1]
+                set distance-moved distance-moved + 1
+                ask peccaries [set color red]
+              ]
+              [stop]
+            ]
+        ]
+      ]
+      [ask patch-here [set contacts contacts + 1]]
     ]
-    [ask patch-here [set contacts contacts + 1]]
-
+    tick
   ]
-tick
 end
 
 to generate-forest
@@ -227,6 +228,17 @@ NIL
 NIL
 NIL
 0
+
+INPUTBOX
+14
+365
+169
+425
+num-steps
+1.0E9
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -570,7 +582,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.0
+NetLogo 6.2.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
